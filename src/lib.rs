@@ -3,11 +3,14 @@
 
 // Third party packages
 extern crate hyper;
+extern crate futures;
 extern crate typemap as tmap;
 extern crate plugin;
 extern crate num_cpus;
 extern crate mime_guess;
 
+#[cfg(test)]
+extern crate mime;
 
 // Request + Response
 pub use request::Request;
@@ -37,6 +40,12 @@ pub mod typemap {
     pub use tmap::{TypeMap, Key};
 }
 
+/// Status Codes
+pub mod status {
+    pub use hyper::StatusCode;
+    pub use hyper::StatusCode::*;
+}
+
 /// HTTP Methods
 pub mod method {
     pub use hyper::Method;
@@ -45,3 +54,6 @@ pub mod method {
 
 // Request utilities
 pub mod request;
+
+// Response utilities
+pub mod response;

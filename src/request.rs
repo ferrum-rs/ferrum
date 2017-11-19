@@ -3,9 +3,7 @@
 use std::net::SocketAddr;
 use std::fmt::{self, Debug};
 
-use hyper::Uri;
-use hyper::HttpVersion;
-use hyper::Body;
+use hyper::{Body, HttpVersion, Uri};
 
 use typemap::TypeMap;
 use plugin::Extensible;
@@ -113,7 +111,6 @@ impl Extensible for Request {
 }
 
 impl Plugin for Request {}
-//impl Set for Request {}
 
 #[cfg(test)]
 mod test {
