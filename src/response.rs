@@ -3,12 +3,12 @@
 use std::fmt::{self, Debug};
 use std::mem::replace;
 
-use typemap::TypeMap;
+use typemap::{TypeMap, TypeMapInner};
 use plugin::Extensible;
 use hyper::{Body, HttpVersion};
 
 use status::StatusCode;
-use {Plugin, Headers};
+use {Plugin, Header, Headers};
 
 pub use hyper::Response as HyperResponse;
 
@@ -25,7 +25,7 @@ pub struct Response {
 
     /// A TypeMap to be used as an extensible storage for data
     /// associated with this Response.
-    pub extensions: TypeMap,
+    pub extensions: TypeMap<TypeMapInner>,
 }
 
 impl Response {
@@ -35,8 +35,44 @@ impl Response {
             status: Default::default(),
             headers: Headers::new(),
             body: None, // Start with no body.
-            extensions: TypeMap::new()
+            extensions: TypeMap::custom()
         }
+    }
+
+    /// Set the status and move the Response.
+    ///
+    /// Useful for the "builder-style" pattern.
+    #[inline]
+    pub fn with_status(mut self, status: StatusCode) -> Self {
+        self.status = status;
+        self
+    }
+
+    /// Set a header and move the Response.
+    ///
+    /// Useful for the "builder-style" pattern.
+    #[inline]
+    pub fn with_header<H: Header>(mut self, header: H) -> Self {
+        self.headers.set(header);
+        self
+    }
+
+    /// Set the headers and move the Response.
+    ///
+    /// Useful for the "builder-style" pattern.
+    #[inline]
+    pub fn with_headers(mut self, headers: Headers) -> Self {
+        self.headers = headers;
+        self
+    }
+
+    /// Set the body and move the Response.
+    ///
+    /// Useful for the "builder-style" pattern.
+    #[inline]
+    pub fn with_body<T: Into<Body>>(mut self, body: T) -> Self {
+        self.body = Some(body.into());
+        self
     }
 }
 
@@ -46,7 +82,7 @@ impl From<HyperResponse> for Response {
             status: from_response.status(),
             headers: replace(from_response.headers_mut(), Headers::new()),
             body: if from_response.body_ref().is_some() { Some(from_response.body()) } else { None },
-            extensions: TypeMap::new()
+            extensions: TypeMap::custom()
         }
     }
 }
@@ -77,12 +113,12 @@ impl fmt::Display for Response {
 }
 
 // Allow plugins to attach to responses.
-impl Extensible for Response {
-    fn extensions(&self) -> &TypeMap {
+impl Extensible<TypeMapInner> for Response {
+    fn extensions(&self) -> &TypeMap<TypeMapInner> {
         &self.extensions
     }
 
-    fn extensions_mut(&mut self) -> &mut TypeMap {
+    fn extensions_mut(&mut self) -> &mut TypeMap<TypeMapInner> {
         &mut self.extensions
     }
 }
@@ -143,7 +179,7 @@ mod test {
                 status: StatusCode::NotFound,
                 headers: headers.clone(),
                 body: Some("Error".as_bytes().to_vec().into()),
-                extensions: TypeMap::new()
+                extensions: TypeMap::custom()
             }
         );
 
