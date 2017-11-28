@@ -8,6 +8,6 @@ fn main() {
 
     let addr = "127.0.0.1:3000".parse().unwrap();
     Ferrum::new(|_: &mut Request| {
-        Ok(Response::new().with_status(status::NotFound))
+        Ok(Response::new().with_status(StatusCode::NotFound))
     }).http(&addr).unwrap();
 }

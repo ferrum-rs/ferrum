@@ -1,5 +1,6 @@
 //! Ferrum's HTTP Request representation and associated methods.
 
+use std::mem;
 use std::net::SocketAddr;
 use std::fmt::{self, Debug};
 
@@ -7,11 +8,10 @@ use hyper::{Body, HttpVersion, Uri};
 
 use typemap::{TypeMap, TypeMapInner};
 use plugin::Extensible;
-use method::Method;
 
 pub use hyper::server::Request as HyperRequest;
 
-use {Plugin, Headers};
+use {Plugin, Headers, Method};
 
 /// The `Request` given to all `Middleware`.
 ///
@@ -35,7 +35,7 @@ pub struct Request {
     pub headers: Headers,
 
     /// The request body.
-    pub body: Body,
+    pub body: Option<Body>,
 
     /// Extensible storage for data passed between middleware.
     pub extensions: TypeMap<TypeMapInner>,
@@ -69,10 +69,15 @@ impl Request {
             version,
             remote_addr,
             headers,
-            body,
+            body: Some(body),
             extensions: TypeMap::custom(),
             _p: (),
         }
+    }
+
+    pub fn take_body(&mut self) -> Body {
+        let body = mem::replace(&mut self.body, None);
+        body.unwrap_or_default()
     }
 
     #[cfg(test)]
@@ -86,7 +91,7 @@ impl Request {
             version: HttpVersion::Http11,
             remote_addr: Some("localhost:3000".to_socket_addrs().unwrap().next().unwrap()),
             headers: Headers::new(),
-            body: Body::default(),
+            body: None,
             extensions: TypeMap::custom(),
             _p: (),
         }

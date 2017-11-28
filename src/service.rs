@@ -10,7 +10,7 @@ use request::{Request, HyperRequest};
 use response::HyperResponse;
 use error::{FerrumError, HyperError};
 use middleware::Handler;
-use status::StatusCode;
+use StatusCode;
 
 pub struct InitialService<H>
     where H: Handler

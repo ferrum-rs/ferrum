@@ -7,8 +7,7 @@ use typemap::{TypeMap, TypeMapInner};
 use plugin::Extensible;
 use hyper::{Body, HttpVersion};
 
-use status::StatusCode;
-use {Plugin, Header, Headers};
+use {Plugin, Header, Headers, StatusCode};
 
 pub use hyper::Response as HyperResponse;
 
@@ -152,7 +151,7 @@ mod test {
             HyperResponse::new()
                 .with_status(StatusCode::NotFound)
                 .with_headers(headers.clone())
-                .with_body("Error".as_bytes().to_vec())
+                .with_body("Error")
         );
 
         assert_eq!(response.status, StatusCode::NotFound);
@@ -178,7 +177,7 @@ mod test {
             Response {
                 status: StatusCode::NotFound,
                 headers: headers.clone(),
-                body: Some("Error".as_bytes().to_vec().into()),
+                body: Some("Error".into()),
                 extensions: TypeMap::custom()
             }
         );

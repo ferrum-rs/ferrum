@@ -53,16 +53,10 @@ pub mod typemap {
 }
 
 /// Status Codes
-pub mod status {
-    pub use hyper::StatusCode;
-    pub use hyper::StatusCode::*;
-}
+pub use hyper::StatusCode;
 
 /// HTTP Methods
-pub mod method {
-    pub use hyper::Method;
-    pub use hyper::Method::*;
-}
+pub use hyper::Method;
 
 // Publicized to show the documentation
 pub mod middleware;
