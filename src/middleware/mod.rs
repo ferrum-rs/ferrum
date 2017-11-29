@@ -1,4 +1,3 @@
-/*
 //! This module contains Ferrum's middleware and handler system, the fundamental
 //! building blocks for handling HTTP requests and generating responses.
 //!
@@ -13,13 +12,11 @@
 //! Here's an example of a `Handler`:
 //!
 //! ```rust
-//! use iron::prelude::*;
-//! use iron::Handler;
-//! use iron::status;
+//! use ferrum::*;
 //!
-//! fn hello_handler(req: &mut Request) -> FerrumResult<Response> {
-//!     Ok(Response::with((status::Ok, "Hello world!")))
-//! };
+//! fn hello_handler(request: &mut Request) -> FerrumResult<Response> {
+//!     Ok(Response::new().with_status(StatusCode::Ok).with_body("Hello world!"))
+//! }
 //! ```
 //!
 //! # Middleware
@@ -51,18 +48,17 @@
 //! each type of middleware. A sample middleware pipeline is shown below:
 //!
 //! ```rust
-//! use iron::prelude::*;
-//! use iron::middleware::*;
+//! use ferrum::*;
+//! use ferrum::middleware::{BeforeMiddleware, Chain};
 //!
-//! # use iron::status;
-//! # fn hello_handler(req: &mut Request) -> FerrumResult<Response> {
-//! #     Ok(Response::with((status::Ok, "Hello world!")))
-//! # };
+//! # fn hello_handler(request: &mut Request) -> FerrumResult<Response> {
+//! #     Ok(Response::new().with_status(StatusCode::Ok).with_body("Hello world!"))
+//! # }
 //!
 //! struct RequestLoggingMiddleware;
 //! impl BeforeMiddleware for RequestLoggingMiddleware {
-//!     fn before(&self, req: &mut Request) -> FerrumResult<()> {
-//!         println!("{:?}", req);
+//!     fn before(&self, request: &mut Request) -> FerrumResult<()> {
+//!         println!("{:?}", request);
 //!         Ok(())
 //!     }
 //! }
@@ -70,7 +66,7 @@
 //! let mut chain = Chain::new(hello_handler);
 //! chain.link_before(RequestLoggingMiddleware {});
 //! // Since a Chain is a Handler, chain can be passed to Ferrum::new without any problems.
-//! // Ferrum::new(chain).http("localhost:3000").unwrap();
+//! // Ferrum::new(chain).http("127.0.0.1:3000").unwrap();
 //! ```
 //!
 //! # The Request Handling Flow
@@ -128,7 +124,6 @@
 //! during the error flow. Anything that *must* be done to each `Request` or
 //! `Response` should be run during both the normal and error flow by
 //! implementing the `catch` method to also do the necessary action.
-*/
 
 use std::sync::Arc;
 use {Request, Response, FerrumResult, FerrumError};
