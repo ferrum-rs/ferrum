@@ -4,7 +4,6 @@ use std::sync::Arc;
 
 use self::Kind::{Fine, Prob};
 
-//use prelude::*;
 use super::*;
 
 #[test] fn test_chain_normal() {

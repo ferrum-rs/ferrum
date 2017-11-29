@@ -49,7 +49,6 @@
 //!
 //! ```rust
 //! use ferrum::*;
-//! use ferrum::middleware::{BeforeMiddleware, Chain};
 //!
 //! # fn hello_handler(request: &mut Request) -> FerrumResult<Response> {
 //! #     Ok(Response::new().with_status(StatusCode::Ok).with_body("Hello world!"))

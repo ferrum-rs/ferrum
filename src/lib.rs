@@ -15,7 +15,7 @@ pub use request::Request;
 pub use response::Response;
 
 // Middleware system
-//pub use middleware::{BeforeMiddleware, AfterMiddleware, AroundMiddleware, Handler, Chain};
+pub use middleware::{BeforeMiddleware, AfterMiddleware, AroundMiddleware, Handler, Chain};
 
 // Server
 pub use ferrum::*;
