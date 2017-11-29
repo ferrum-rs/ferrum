@@ -3,13 +3,11 @@
 // Shows how to read the request body with error handling and how to return a
 // response. See `helper_macros` example for a different way to handle errors.
 
-extern crate futures;
 extern crate ferrum;
 
-use futures::Future;
-use futures::stream::Stream;
-
 use ferrum::*;
+use ferrum::futures::Future;
+use ferrum::futures::stream::Stream;
 
 fn echo(request: &mut Request) -> FerrumResult<Response> {
     Ok(match request.method {

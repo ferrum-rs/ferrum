@@ -1,16 +1,12 @@
-// Stdlib dependencies
 #[macro_use] extern crate log;
-
-// Third party packages
-extern crate hyper;
-extern crate futures;
+pub extern crate hyper;
+pub extern crate futures;
 extern crate futures_cpupool;
 extern crate typemap as tmap;
 extern crate unsafe_any as uany;
 extern crate plugin;
 extern crate num_cpus;
 extern crate mime_guess;
-
 #[cfg(test)]
 extern crate mime;
 
