@@ -1,5 +1,4 @@
 extern crate ferrum;
-extern crate time;
 
 use std::error::Error;
 use std::fmt::{self, Debug};
