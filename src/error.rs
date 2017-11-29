@@ -5,6 +5,9 @@ use {Response};
 pub use std::error::Error;
 pub use hyper::Error as HyperError;
 pub use hyper::error::Result as HyperResult;
+use hyper::Response as HyperResponse;
+use hyper::header::ContentLength;
+use hyper::StatusCode;
 
 /// The type of Errors inside and when using Ferrum.
 ///
@@ -29,14 +32,14 @@ pub struct FerrumError {
     /// What to do about this error.
     ///
     /// This Response will be used when the error-handling flow finishes.
-    pub response: Response
+    pub response: Option<Response>
 }
 
 impl FerrumError {
     /// Create a new `FerrumError` from an error and a response.
-    pub fn new<E: 'static + Error + Send>(err: E, response: Response) -> FerrumError {
+    pub fn new<E: 'static + Error + Send>(error: E, response: Option<Response>) -> FerrumError {
         FerrumError {
-            error: Box::new(err),
+            error: Box::new(error),
             response
         }
     }
@@ -58,3 +61,17 @@ impl Error for FerrumError {
     }
 }
 
+impl From<FerrumError> for HyperResponse {
+    fn from(error: FerrumError) -> HyperResponse {
+        match error.response {
+            Some(response) => HyperResponse::from(response),
+            None => {
+                let error_message = format!("ERROR: {}", error);
+                HyperResponse::new()
+                    .with_header(ContentLength(error_message.len() as u64))
+                    .with_body(error_message)
+                    .with_status(StatusCode::InternalServerError)
+            }
+        }
+    }
+}

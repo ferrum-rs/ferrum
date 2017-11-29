@@ -26,5 +26,5 @@ fn echo(request: &mut Request) -> FerrumResult<Response> {
 }
 
 fn main() {
-    Ferrum::new(echo).http("127.0.0.1:3000").unwrap();
+    Ferrum::new(echo).http("localhost:3000").unwrap();
 }

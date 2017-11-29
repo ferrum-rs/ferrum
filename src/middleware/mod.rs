@@ -144,13 +144,17 @@ pub trait Handler: Send + Sync + 'static {
 /// is not an error cannot be `BeforeMiddleware`, but should instead be `AroundMiddleware`.
 pub trait BeforeMiddleware: Send + Sync + 'static {
     /// Do whatever work this middleware should do with a `Request` object.
-    fn before(&self, _request: &mut Request) -> FerrumResult<()> { Ok(()) }
+    fn before(&self, _request: &mut Request) -> FerrumResult<()> {
+        Ok(())
+    }
 
     /// Respond to an error thrown by a previous `BeforeMiddleware`.
     ///
     /// Returning a `Ok` will cause the request to resume the normal flow at the
     /// next `BeforeMiddleware`, or if this was the last `BeforeMiddleware`, at the `Handler`.
-    fn catch(&self, _request: &mut Request, error: FerrumError) -> FerrumResult<()> { Err(error) }
+    fn catch(&self, _request: &mut Request, error: FerrumError) -> FerrumResult<()> {
+        Err(error)
+    }
 }
 
 /// `AfterMiddleware` are fired after a `Handler` is called inside of a Chain.
@@ -221,7 +225,8 @@ impl Chain {
     /// Middleware that have a Before and After piece should have a constructor
     /// which returns both as a tuple, so it can be passed directly to link.
     pub fn link<B, A>(&mut self, link: (B, A)) -> &mut Chain
-    where A: AfterMiddleware, B: BeforeMiddleware {
+        where A: AfterMiddleware, B: BeforeMiddleware
+    {
         let (before, after) = link;
         self.befores.push(Box::new(before) as Box<BeforeMiddleware>);
         self.afters.push(Box::new(after) as Box<AfterMiddleware>);
@@ -231,7 +236,8 @@ impl Chain {
     /// Link a `BeforeMiddleware` to the `Chain`, after all previously linked
     /// `BeforeMiddleware`.
     pub fn link_before<B>(&mut self, before: B) -> &mut Chain
-    where B: BeforeMiddleware {
+        where B: BeforeMiddleware
+    {
         self.befores.push(Box::new(before) as Box<BeforeMiddleware>);
         self
     }
@@ -239,7 +245,8 @@ impl Chain {
     /// Link a `AfterMiddleware` to the `Chain`, after all previously linked
     /// `AfterMiddleware`.
     pub fn link_after<A>(&mut self, after: A) -> &mut Chain
-    where A: AfterMiddleware {
+        where A: AfterMiddleware
+    {
         self.afters.push(Box::new(after) as Box<AfterMiddleware>);
         self
     }
@@ -249,13 +256,15 @@ impl Chain {
     /// Note: This function is being renamed `link_around()`, and will
     /// eventually be removed.
     pub fn around<A>(&mut self, around: A) -> &mut Chain
-    where A: AroundMiddleware {
+        where A: AroundMiddleware
+    {
         self.link_around(around)
     }
 
     /// Apply an `AroundMiddleware` to the `Handler` in this `Chain`.
     pub fn link_around<A>(&mut self, around: A) -> &mut Chain
-    where A: AroundMiddleware {
+        where A: AroundMiddleware
+    {
         let mut handler = self.handler.take().unwrap();
         handler = around.around(handler);
         self.handler = Some(handler);
@@ -377,7 +386,8 @@ impl Chain {
 }
 
 impl<F> Handler for F
-where F: Send + Sync + 'static + Fn(&mut Request) -> FerrumResult<Response> {
+    where F: Send + Sync + 'static + Fn(&mut Request) -> FerrumResult<Response>
+{
     fn handle(&self, req: &mut Request) -> FerrumResult<Response> {
         (*self)(req)
     }
@@ -390,7 +400,8 @@ impl Handler for Box<Handler> {
 }
 
 impl<F> BeforeMiddleware for F
-where F: Send + Sync + 'static + Fn(&mut Request) -> FerrumResult<()> {
+    where F: Send + Sync + 'static + Fn(&mut Request) -> FerrumResult<()>
+{
     fn before(&self, req: &mut Request) -> FerrumResult<()> {
         (*self)(req)
     }
@@ -406,7 +417,9 @@ impl BeforeMiddleware for Box<BeforeMiddleware> {
     }
 }
 
-impl<T> BeforeMiddleware for Arc<T> where T: BeforeMiddleware {
+impl<T> BeforeMiddleware for Arc<T>
+    where T: BeforeMiddleware
+{
     fn before(&self, req: &mut Request) -> FerrumResult<()> {
         (**self).before(req)
     }
@@ -417,7 +430,8 @@ impl<T> BeforeMiddleware for Arc<T> where T: BeforeMiddleware {
 }
 
 impl<F> AfterMiddleware for F
-where F: Send + Sync + 'static + Fn(&mut Request, Response) -> FerrumResult<Response> {
+    where F: Send + Sync + 'static + Fn(&mut Request, Response) -> FerrumResult<Response>
+{
     fn after(&self, req: &mut Request, res: Response) -> FerrumResult<Response> {
         (*self)(req, res)
     }
@@ -444,7 +458,8 @@ impl<T> AfterMiddleware for Arc<T> where T: AfterMiddleware {
 }
 
 impl<F> AroundMiddleware for F
-where F: FnOnce(Box<Handler>) -> Box<Handler> {
+    where F: FnOnce(Box<Handler>) -> Box<Handler>
+{
     fn around(self, handler: Box<Handler>) -> Box<Handler> {
         self(handler)
     }

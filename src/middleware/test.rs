@@ -158,7 +158,7 @@ fn error() -> FerrumError {
 
     FerrumError {
         error: Box::new(SomeError),
-        response: response()
+        response: Some(response())
     }
 }
 

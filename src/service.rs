@@ -2,15 +2,13 @@ use std::io;
 use std::sync::Arc;
 
 use hyper::server::{NewService, Service};
-use hyper::header::ContentLength;
 use futures::{future, Future};
 use futures_cpupool::{CpuPool, CpuFuture};
 
 use request::{Request, HyperRequest};
 use response::HyperResponse;
-use error::{FerrumError, HyperError};
+use error::HyperError;
 use middleware::Handler;
-use StatusCode;
 
 pub struct InitialService<H>
     where H: Handler
@@ -95,8 +93,9 @@ impl<H> Service for InitialService<H>
                     future::ok(response)
                 })
                 .or_else(move |error| {
+                    error!("Error handling: {}", error);
                     let response = HyperResponse::from(error);
-                    error!(
+                    info!(
                         "[RESPONSE] {} {}",
                         response.version(),
                         response.status()
@@ -105,15 +104,5 @@ impl<H> Service for InitialService<H>
                 })
             )
         })
-    }
-}
-
-impl From<FerrumError> for HyperResponse {
-    fn from(error: FerrumError) -> HyperResponse {
-        let error = format!("ERROR: {}", error);
-        HyperResponse::new()
-            .with_header(ContentLength(error.len() as u64))
-            .with_body(error)
-            .with_status(StatusCode::InternalServerError)
     }
 }

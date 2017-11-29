@@ -8,5 +8,5 @@ fn main() {
 
     Ferrum::new(|_: &mut Request| {
         Ok(Response::new().with_status(StatusCode::NotFound))
-    }).http("127.0.0.1:3000").unwrap();
+    }).http("localhost:3000").unwrap();
 }
