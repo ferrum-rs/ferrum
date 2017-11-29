@@ -28,6 +28,5 @@ fn echo(request: &mut Request) -> FerrumResult<Response> {
 }
 
 fn main() {
-    let addr = "127.0.0.1:3000".parse().unwrap();
-    Ferrum::new(echo).http(&addr).unwrap();
+    Ferrum::new(echo).http("127.0.0.1:3000").unwrap();
 }
