@@ -7,31 +7,36 @@ extern crate unsafe_any as uany;
 extern crate plugin;
 extern crate num_cpus;
 extern crate mime_guess;
-#[cfg(test)]
-extern crate mime;
+pub extern crate mime;
 
-// Request + Response
+/// Request + Response
 pub use request::Request;
 pub use response::Response;
 
-// Middleware system
+/// Middleware system
 pub use middleware::{BeforeMiddleware, AfterMiddleware, AroundMiddleware, Handler, Chain};
 
-// Server
+/// Server
 pub use ferrum::*;
 
-// Extensions
+/// Extensions
 pub use typemap::TypeMap;
 
-// Headers
+/// Headers
 pub use hyper::header;
 pub use hyper::header::Headers;
 pub use hyper::header::Header;
 
-// Expose `Pluggable` as `Plugin` so users can do `use iron::Plugin`.
+/// Status Codes
+pub use hyper::StatusCode;
+
+/// HTTP Methods
+pub use hyper::Method;
+
+/// Expose `Pluggable` as `Plugin` so users can do `use iron::Plugin`.
 pub use plugin::Pluggable as Plugin;
 
-// Errors
+/// Errors
 pub use error::Error;
 pub use error::FerrumError;
 
@@ -48,20 +53,16 @@ pub mod typemap {
     pub type TypeMapInner = UnsafeAny + Send + Sync;
 }
 
-/// Status Codes
-pub use hyper::StatusCode;
-
-/// HTTP Methods
-pub use hyper::Method;
-
 // Publicized to show the documentation
 pub mod middleware;
 
-// Request utilities
+/// Request utilities
 pub mod request;
 
-// Response utilities
+/// Response utilities
 pub mod response;
+
+pub mod content;
 
 mod service;
 

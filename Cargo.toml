@@ -20,6 +20,7 @@ typemap = "0.3"
 url = "1.6"
 unsafe-any = "0.4"
 plugin = { git = "https://github.com/MJDSys/rust-plugin", branch = "plugin-with-sendmap" }
+mime = "0.3"
 mime_guess = "1.8"
 modifier = "0.1"
 log = "0.3"
@@ -31,5 +32,4 @@ futures-cpupool = "0.1"
 
 [dev-dependencies]
 time = "0.1"
-mime = "0.3"
 env_logger = "0.4"

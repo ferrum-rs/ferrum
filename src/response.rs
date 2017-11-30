@@ -3,10 +3,13 @@
 use std::fmt::{self, Debug};
 use std::mem::replace;
 
+use mime::Mime;
 use typemap::{TypeMap, TypeMapInner};
 use plugin::Extensible;
 use hyper::{Body, HttpVersion};
+use hyper::header::{ContentLength, ContentType};
 
+use content::Content;
 use {Plugin, Header, Headers, StatusCode};
 
 pub use hyper::Response as HyperResponse;
@@ -72,6 +75,40 @@ impl Response {
     pub fn with_body<T: Into<Body>>(mut self, body: T) -> Self {
         self.body = Some(body.into());
         self
+    }
+
+    /// Set the content and move the Response.
+    ///
+    /// Useful for the "builder-style" pattern.
+    #[inline]
+    pub fn with_content<C: Into<Content>>(mut self, content: C, mime: Mime) -> Self {
+        self.set_content(content, mime);
+        self
+    }
+
+    /// Set the content.
+    #[inline]
+    pub fn set_content<C: Into<Content>>(&mut self, content: C, mime: Mime) {
+        let content = content.into();
+        self.headers.set(ContentType(mime));
+        self.headers.set(ContentLength(content.len() as u64));
+        self.body = Some(content.into());
+        self.status = StatusCode::Ok;
+    }
+
+    /// Set the content-type mime and move the Response.
+    ///
+    /// Useful for the "builder-style" pattern.
+    #[inline]
+    pub fn with_mime(mut self, mime: Mime) -> Self {
+        self.set_mime(mime);
+        self
+    }
+
+    /// Set the content-type mime.
+    #[inline]
+    pub fn set_mime(&mut self, mime: Mime) {
+        self.headers.set(ContentType(mime));
     }
 }
 
