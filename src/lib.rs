@@ -28,10 +28,7 @@ pub use hyper::header::Headers;
 pub use hyper::header::Header;
 
 /// Status Codes
-pub use hyper::StatusCode;
-
-/// HTTP Methods
-pub use hyper::Method;
+pub use hyper::{Method, StatusCode, Uri};
 
 /// Expose `Pluggable` as `Plugin` so users can do `use iron::Plugin`.
 pub use plugin::Pluggable as Plugin;

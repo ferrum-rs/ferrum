@@ -7,7 +7,7 @@ use mime::Mime;
 use typemap::{TypeMap, TypeMapInner};
 use plugin::Extensible;
 use hyper::{Body, HttpVersion};
-use hyper::header::{ContentLength, ContentType};
+use hyper::header::{ContentLength, ContentType, Location, Raw};
 
 use content::Content;
 use {Plugin, Header, Headers, StatusCode};
@@ -32,10 +32,25 @@ pub struct Response {
 
 impl Response {
     /// Construct a blank Response
+    #[inline]
     pub fn new() -> Response {
         Response {
             status: Default::default(),
             headers: Headers::new(),
+            body: None, // Start with no body.
+            extensions: TypeMap::custom()
+        }
+    }
+
+    /// Construct a redirect Response
+    #[inline]
+    pub fn new_redirect<R: Into<Raw>>(location: R) -> Response {
+        let mut headers = Headers::new();
+        headers.set(Location::parse_header(&location.into()).unwrap());
+
+        Response {
+            status: StatusCode::Found,
+            headers,
             body: None, // Start with no body.
             extensions: TypeMap::custom()
         }
