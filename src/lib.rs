@@ -1,4 +1,3 @@
-#[macro_use] extern crate log;
 pub extern crate hyper;
 pub extern crate futures;
 extern crate futures_cpupool;

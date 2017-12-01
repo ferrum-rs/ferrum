@@ -23,7 +23,6 @@ plugin = { git = "https://github.com/MJDSys/rust-plugin", branch = "plugin-with-
 mime = "0.3"
 mime_guess = "1.8"
 modifier = "0.1"
-log = "0.3"
 num_cpus = "1.7"
 hyper = "0.11"
 hyper-native-tls = { version = "0.2", optional = true }
@@ -32,4 +31,3 @@ futures-cpupool = "0.1"
 
 [dev-dependencies]
 time = "0.1"
-env_logger = "0.4"

@@ -2,6 +2,7 @@
 
 use std::net::ToSocketAddrs;
 use std::time::Duration;
+use std::io::{Error, ErrorKind};
 
 use hyper::server::Http;
 
@@ -59,15 +60,9 @@ impl<H> Ferrum<H>
     pub fn http<A>(self, addr: A) -> HyperResult<()>
         where A: ToSocketAddrs
     {
-        let mut addrs = addr.to_socket_addrs().map_err(|err| {
-            error!("Error to_socket_addrs: {}", err);
-            err
-        }).unwrap();
-
-        let addr = addrs.next().or_else(|| {
-            error!("Empty addrs");
-            None
-        }).unwrap();
+        let addr = addr.to_socket_addrs()?
+            .next()
+            .ok_or(Error::new(ErrorKind::Other, "Empty addrs"))?;
 
         let mut server = Http::new();
         server.keep_alive(self.keep_alive);

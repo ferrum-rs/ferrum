@@ -67,13 +67,6 @@ impl<H> Service for InitialService<H>
     type Future = CpuFuture<Self::Response, Self::Error>;
 
     fn call(&self, request: Self::Request) -> Self::Future {
-        info!(
-            "[REQUEST] {} {} {}",
-            request.version(),
-            request.method(),
-            request.path()
-        );
-
         let mut request = Request::new(request);
         let handler = self.handler.clone();
 
@@ -84,23 +77,10 @@ impl<H> Service for InitialService<H>
             };
             Box::new(handle_result
                 .and_then(move |response| {
-                    let response = HyperResponse::from(response);
-                    info!(
-                        "[RESPONSE] {} {}",
-                        response.version(),
-                        response.status()
-                    );
-                    future::ok(response)
+                    future::ok(HyperResponse::from(response))
                 })
                 .or_else(move |error| {
-                    error!("Error handling: {}", error);
-                    let response = HyperResponse::from(error);
-                    info!(
-                        "[RESPONSE] {} {}",
-                        response.version(),
-                        response.status()
-                    );
-                    future::ok(response)
+                    future::ok(HyperResponse::from(error))
                 })
             )
         })
