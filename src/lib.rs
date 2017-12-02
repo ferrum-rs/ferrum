@@ -1,7 +1,6 @@
 pub extern crate hyper;
 pub extern crate futures;
 extern crate futures_cpupool;
-extern crate typemap as tmap;
 extern crate unsafe_any as uany;
 extern crate plugin;
 extern crate num_cpus;
@@ -29,7 +28,7 @@ pub use hyper::header::Header;
 /// Status Codes
 pub use hyper::{Method, StatusCode, Uri};
 
-/// Expose `Pluggable` as `Plugin` so users can do `use iron::Plugin`.
+/// Expose `Pluggable` as `Plugin` so users can do `use ferrum::Plugin`.
 pub use plugin::Pluggable as Plugin;
 
 /// Errors
@@ -39,7 +38,7 @@ pub use error::FerrumError;
 /// Ferrum's error type and associated utilities.
 pub mod error;
 
-/// The Result alias used throughout Iron and in clients of Iron.
+/// The Result alias used throughout Ferrum and in clients of Ferrum.
 pub type FerrumResult<T> = Result<T, FerrumError>;
 
 /// Re-exports from the `TypeMap` crate.

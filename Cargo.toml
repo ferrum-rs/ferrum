@@ -2,10 +2,17 @@
 
 name = "ferrum"
 version = "0.1.0"
-description = "Extensible, Concurrency Focused Web Development in Rust."
+description = "Extensible, Concurrency Focused Web Framework in Rust."
 readme = "README.md"
 repository = "https://github.com/ferrum-rs/ferrum"
 license = "MIT"
+authors = [
+    "Jonathan Reem <jonathan.reem@gmail.com>",
+    "Zach Pomerantz <zmp@umich.edu>",
+    "Michael Sproul <micsproul@gmail.com>",
+    "Patrick Tran <patrick.tran06@gmail.com>",
+    "Alexander Meshcheryakov <freecoder.xx@gmail.com>"
+]
 
 [lib]
 name = "ferrum"
@@ -13,19 +20,15 @@ path = "src/lib.rs"
 
 [features]
 default = []
-native-tls-example = ["hyper-native-tls"]
 
 [dependencies]
-typemap = "0.3"
 url = "1.6"
 unsafe-any = "0.4"
 plugin = { git = "https://github.com/MJDSys/rust-plugin", branch = "plugin-with-sendmap" }
 mime = "0.3"
 mime_guess = "1.8"
-modifier = "0.1"
 num_cpus = "1.7"
 hyper = "0.11"
-hyper-native-tls = { version = "0.2", optional = true }
 futures = "0.1"
 futures-cpupool = "0.1"
 
