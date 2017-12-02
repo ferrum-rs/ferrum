@@ -24,16 +24,16 @@ impl From<Vec<u8>> for Content {
     }
 }
 
-impl From<&'static [u8]> for Content {
+impl<'a> From<&'a [u8]> for Content {
     #[inline]
-    fn from(slice: &'static [u8]) -> Content {
+    fn from(slice: &'a [u8]) -> Content {
         Content(slice.to_vec())
     }
 }
 
-impl From<Cow<'static, [u8]>> for Content {
+impl<'a> From<Cow<'a, [u8]>> for Content {
     #[inline]
-    fn from (cow: Cow<'static, [u8]>) -> Content {
+    fn from (cow: Cow<'a, [u8]>) -> Content {
         match cow {
             Cow::Borrowed(b) => Content::from(b),
             Cow::Owned(o) => Content::from(o)
@@ -48,16 +48,16 @@ impl From<String> for Content {
     }
 }
 
-impl From<&'static str> for Content {
+impl<'a> From<&'a str> for Content {
     #[inline]
-    fn from(slice: &'static str) -> Content {
+    fn from(slice: &'a str) -> Content {
         Content(slice.as_bytes().to_vec())
     }
 }
 
-impl From<Cow<'static, str>> for Content {
+impl<'a> From<Cow<'a, str>> for Content {
     #[inline]
-    fn from (cow: Cow<'static, str>) -> Content {
+    fn from (cow: Cow<'a, str>) -> Content {
         match cow {
             Cow::Borrowed(b) => Content::from(b),
             Cow::Owned(o) => Content::from(o)
