@@ -1,7 +1,9 @@
 Ferrum
 ======
 
-An Extensible, Concurrent Web Framework for Rust. This is the fork of the [Iron](https://github.com/iron/iron).
+> An Extensible, Concurrent Web Framework for Rust.
+
+Ferrum is a fork of the [Iron](https://github.com/iron/iron).
 
 ## Hello World Example
 
