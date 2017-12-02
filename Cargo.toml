@@ -1,7 +1,7 @@
 [package]
 
 name = "ferrum"
-version = "0.1.0"
+version = "0.1.1"
 description = "Extensible, Concurrency Focused Web Framework in Rust."
 readme = "README.md"
 repository = "https://github.com/ferrum-rs/ferrum"
@@ -22,9 +22,9 @@ path = "src/lib.rs"
 default = []
 
 [dependencies]
+ferrum-plugin = "0.3"
 url = "1.6"
 unsafe-any = "0.4"
-plugin = { git = "https://github.com/MJDSys/rust-plugin", branch = "plugin-with-sendmap" }
 mime = "0.3"
 mime_guess = "1.8"
 num_cpus = "1.7"

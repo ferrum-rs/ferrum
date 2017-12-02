@@ -2,7 +2,7 @@ pub extern crate hyper;
 pub extern crate futures;
 extern crate futures_cpupool;
 extern crate unsafe_any as uany;
-extern crate plugin;
+extern crate ferrum_plugin as plugin;
 extern crate num_cpus;
 extern crate mime_guess;
 pub extern crate mime;
