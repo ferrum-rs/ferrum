@@ -60,6 +60,6 @@ pub mod response;
 
 pub mod content;
 
-mod service;
+pub mod service;
 
 mod ferrum;

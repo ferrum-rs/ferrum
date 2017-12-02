@@ -4,11 +4,14 @@ use std::net::ToSocketAddrs;
 use std::time::Duration;
 use std::io::{Error, ErrorKind};
 
-use hyper::server::Http;
+use hyper::Body;
+use hyper::server::{Http, Server as HyperServer};
 
 use error::HyperResult;
 use service::InitialService;
 use middleware::Handler;
+
+pub type Server<H> = HyperServer<InitialService<H>, Body>;
 
 /// The primary entrance point to `Ferrum`, a `struct` to instantiate a new server.
 ///
@@ -52,12 +55,18 @@ impl<H> Ferrum<H>
     /// Kick off the server process using the HTTP protocol.
     ///
     /// Call this once to begin listening for requests on the server.
-    /// This consumes the Ferrum instance, but does the listening on
-    /// another task, so is not blocking.
-    ///
-    /// The thread returns a guard that will automatically join with the parent
-    /// once it is dropped, blocking until this happens.
+    /// This consumes the Ferrum instance. This method will block
+    /// the current thread executing the HTTP server.
     pub fn http<A>(self, addr: A) -> HyperResult<()>
+        where A: ToSocketAddrs
+    {
+        let server = self.server(addr)?;//server.bind(&addr, InitialService::new(self.handler, Some(self.num_threads)))?;
+        server.run()
+    }
+
+    /// Bind the provided `addr` and return a server ready to handle
+    /// connections.
+    pub fn server<A>(self, addr: A) -> HyperResult<Server<H>>
         where A: ToSocketAddrs
     {
         let addr = addr.to_socket_addrs()?
@@ -66,7 +75,6 @@ impl<H> Ferrum<H>
 
         let mut server = Http::new();
         server.keep_alive(self.keep_alive);
-        let server = server.bind(&addr, InitialService::new(self.handler, Some(self.num_threads)))?;
-        server.run()
+        server.bind(&addr, InitialService::new(self.handler, Some(self.num_threads)))
     }
 }
