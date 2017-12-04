@@ -6,6 +6,7 @@ extern crate ferrum_plugin as plugin;
 extern crate num_cpus;
 extern crate mime_guess;
 pub extern crate mime;
+pub extern crate url;
 
 /// Request + Response
 pub use request::Request;

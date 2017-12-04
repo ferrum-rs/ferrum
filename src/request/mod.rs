@@ -13,6 +13,9 @@ pub use hyper::server::Request as HyperRequest;
 
 use {Plugin, Headers, Method};
 
+pub mod uri;
+pub use self::uri::*;
+
 /// The `Request` given to all `Middleware`.
 ///
 /// Stores all the properties of the client's request plus
@@ -20,6 +23,9 @@ use {Plugin, Headers, Method};
 pub struct Request {
     /// The requested URI.
     pub uri: Uri,
+
+    /// The URI path segments collection
+    pub uri_path_segments: Vec<String>,
 
     /// The request method.
     pub method: Method,
@@ -63,8 +69,11 @@ impl Request {
         let remote_addr = request.remote_addr();
         let (method, uri, version, headers, body) = request.deconstruct();
 
+        let uri_path_segments = uri.decoded_path_segments();
+
         Request {
             uri,
+            uri_path_segments,
             method,
             version,
             remote_addr,
@@ -85,8 +94,12 @@ impl Request {
         use std::net::ToSocketAddrs;
         use std::str::FromStr;
 
+        let uri = Uri::from_str("http://www.rust-lang.org").unwrap();
+        let uri_path_segments = uri.decoded_path_segments();
+
         Request {
-            uri: Uri::from_str("http://www.rust-lang.org").unwrap(),
+            uri,
+            uri_path_segments,
             method: Method::Get,
             version: HttpVersion::Http11,
             remote_addr: Some("localhost:3000".to_socket_addrs().unwrap().next().unwrap()),
@@ -119,12 +132,13 @@ mod test {
 
     #[test]
     fn test_create_request() {
-        let uri = Uri::from_str("http://www.rust-lang.org").unwrap();
+        let uri = Uri::from_str("http://www.rust-lang.org/foo/bar").unwrap();
         let request = Request::new(
             HyperRequest::new(Method::Get, uri.clone())
         );
 
         assert_eq!(request.uri, uri);
+        assert_eq!(request.uri_path_segments, vec!["foo".to_string(), "bar".to_string()]);
         assert_eq!(request.method, Method::Get);
         assert_eq!(request.version, HttpVersion::default());
         assert_eq!(request.remote_addr, None);
@@ -138,6 +152,7 @@ mod test {
         let request = Request::stub();
 
         assert_eq!(request.uri, uri);
+        assert_eq!(request.uri_path_segments, vec!["".to_string()]);
         assert_eq!(request.method, Method::Get);
         assert_eq!(request.version, HttpVersion::default());
         assert_eq!(request.remote_addr.unwrap(), addr);
