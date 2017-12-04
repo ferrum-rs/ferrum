@@ -58,8 +58,6 @@ pub mod request;
 /// Response utilities
 pub mod response;
 
-pub mod content;
-
 pub mod service;
 
 mod ferrum;

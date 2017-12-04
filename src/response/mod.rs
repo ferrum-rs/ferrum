@@ -9,10 +9,12 @@ use plugin::Extensible;
 use hyper::{Body, HttpVersion};
 use hyper::header::{ContentLength, ContentType, Location, Raw};
 
-use content::Content;
 use {Plugin, Header, Headers, StatusCode};
 
 pub use hyper::Response as HyperResponse;
+
+pub mod content;
+pub use self::content::*;
 
 /// The response representation given to `Middleware`
 pub struct Response {

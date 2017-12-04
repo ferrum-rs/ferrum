@@ -1,6 +1,6 @@
 [package]
 name = "ferrum"
-version = "0.1.2"
+version = "0.2.0"
 description = "Extensible, Concurrency Focused Web Framework in Rust."
 readme = "README.md"
 repository = "https://github.com/ferrum-rs/ferrum"
