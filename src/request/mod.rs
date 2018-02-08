@@ -51,12 +51,12 @@ pub struct Request {
 
 impl Debug for Request {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        try!(writeln!(f, "Request {{"));
-        try!(writeln!(f, "    uri: {:?}", self.uri));
-        try!(writeln!(f, "    method: {:?}", self.method));
-        try!(writeln!(f, "    version: {:?}", self.version));
-        try!(writeln!(f, "    remote_addr: {:?}", self.remote_addr));
-        try!(write!(f, "}}"));
+        writeln!(f, "Request {{")?;
+        writeln!(f, "    uri: {:?}", self.uri)?;
+        writeln!(f, "    method: {:?}", self.method)?;
+        writeln!(f, "    version: {:?}", self.version)?;
+        writeln!(f, "    remote_addr: {:?}", self.remote_addr)?;
+        write!(f, "}}")?;
         Ok(())
     }
 }
