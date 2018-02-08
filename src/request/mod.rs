@@ -66,6 +66,7 @@ impl Request {
     ///
     /// This constructor consumes the HyperRequest.
     pub fn new(request: HyperRequest) -> Request {
+        #[allow(deprecated)]
         let remote_addr = request.remote_addr();
         let (method, uri, version, headers, body) = request.deconstruct();
 
